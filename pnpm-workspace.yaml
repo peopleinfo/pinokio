@@ -1,0 +1,9 @@
+onlyBuiltDependencies:
+  - '@homebridge/node-pty-prebuilt-multiarch'
+  - '@parcel/watcher'
+  - bufferutil
+  - electron
+  - electron-winstaller
+  - esbuild
+  - go-get-folder-size
+  - lzma-native

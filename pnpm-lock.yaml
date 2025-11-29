@@ -15,7 +15,7 @@ importers:
         specifier: latest
         version: 2.6.1
 
-  apps/desktop:
+  apps/pinokio:
     dependencies:
       electron-progressbar:
         specifier: ^2.2.1
@@ -3911,7 +3911,7 @@ snapshots:
       node-gyp: 11.5.0
       ora: 5.4.1
       read-binary-file-arch: 1.0.6
-      semver: 7.7.2
+      semver: 7.7.3
       tar: 6.2.1
       yargs: 17.7.2
     transitivePeerDependencies:
@@ -4118,7 +4118,7 @@ snapshots:
 
   '@npmcli/fs@4.0.0':
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   '@npmcli/move-file@2.0.1':
     dependencies:
@@ -4291,7 +4291,7 @@ snapshots:
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.19.1
+      '@types/node': 24.10.1
     optional: true
 
   '@vitejs/plugin-react@5.1.1(vite@7.2.4(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.8.1))':
@@ -6245,7 +6245,7 @@ snapshots:
 
   node-abi@4.24.0:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   node-addon-api@1.7.2:
     optional: true
@@ -6260,7 +6260,7 @@ snapshots:
 
   node-api-version@0.2.1:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   node-downloader-helper@2.1.9: {}
 
@@ -6289,7 +6289,7 @@ snapshots:
       make-fetch-happen: 14.0.3
       nopt: 8.1.0
       proc-log: 5.0.0
-      semver: 7.7.2
+      semver: 7.7.3
       tar: 7.5.2
       tinyglobby: 0.2.15
       which: 5.0.0

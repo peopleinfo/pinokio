@@ -7,5 +7,6 @@ interface Window {
     startInspector: (payload?: any) => Promise<any>;
     stopInspector: () => Promise<any>;
     captureScreenshot: (screenshotRequest: any) => Promise<any>;
+    setDashboardView: (config: { view: 'home' | 'dashboard'; port?: number }) => Promise<void>;
   };
 }

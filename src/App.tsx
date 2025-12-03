@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -6,6 +6,7 @@ function App() {
   const [port, setPort] = useState<number | null>(null);
   const [counter, setCounter] = useState<number | null>(null);
   const [view, setView] = useState<"home" | "dashboard">("home");
+  const topBarRef = useRef<HTMLDivElement | null>(null);
 
   const fetchCounter = async (currentPort: number) => {
     try {
@@ -56,16 +57,20 @@ function App() {
 
   const openDashboard = async () => {
     setView("dashboard");
+    const headerHeight = topBarRef.current?.offsetHeight || undefined;
     await window.electronAPI.setDashboardView({
       view: "dashboard",
       port,
+      headerHeight,
     });
   };
 
   const switchToHome = async () => {
     setView("home");
+    const headerHeight = topBarRef.current?.offsetHeight || undefined;
     await window.electronAPI.setDashboardView({
       view: "home",
+      headerHeight,
     });
   };
 
@@ -84,48 +89,69 @@ function App() {
         }}
       >
         <div
+          ref={topBarRef}
           style={{
+            position: "relative",
+            height: 56,
             display: "flex",
+            alignItems: "center",
             borderBottom: "1px solid #eaeaea",
             background: "#fff",
           }}
         >
-          <button
-            onClick={switchToHome}
-            style={{
-              padding: "12px 20px",
-              background: "transparent",
-              border: "none",
-              borderBottom:
-                view === "home" ? "2px solid #111827" : "2px solid transparent",
-              fontWeight: view === "home" ? 600 : 400,
-              cursor: "pointer",
-              fontSize: "14px",
-            }}
-          >
-            Home
-          </button>
-          <button
-            onClick={openDashboard}
-            style={{
-              padding: "12px 20px",
-              background: "transparent",
-              border: "none",
-              borderBottom:
-                view === "dashboard"
-                  ? "2px solid #111827"
-                  : "2px solid transparent",
-              fontWeight: view === "dashboard" ? 600 : 400,
-              cursor: "pointer",
-              fontSize: "14px",
-            }}
-          >
-            Dashboard
-          </button>
           <div
             style={{
-              marginLeft: "auto",
-              padding: "12px 20px",
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+              top: 0,
+              bottom: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: 0,
+            }}
+          >
+            <button
+              onClick={switchToHome}
+              style={{
+                padding: "12px 20px",
+                background: "transparent",
+                border: "none",
+                borderBottom:
+                  view === "home"
+                    ? "2px solid #111827"
+                    : "2px solid transparent",
+                fontWeight: view === "home" ? 600 : 400,
+                cursor: "pointer",
+                fontSize: "14px",
+              }}
+            >
+              Home
+            </button>
+            <button
+              onClick={openDashboard}
+              style={{
+                padding: "12px 20px",
+                background: "transparent",
+                border: "none",
+                borderBottom:
+                  view === "dashboard"
+                    ? "2px solid #111827"
+                    : "2px solid transparent",
+                fontWeight: view === "dashboard" ? 600 : 400,
+                cursor: "pointer",
+                fontSize: "14px",
+              }}
+            >
+              Dashboard
+            </button>
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              right: 20,
+              top: "50%",
+              transform: "translateY(-50%)",
               fontSize: "14px",
               color: "#666",
             }}

@@ -2528,11 +2528,54 @@ document.querySelector("form").addEventListener("submit", (e) => {
   });
 
   let dashboardView = null;
+  const TAB_BAR_HEIGHT = 56;
+  let activeHeaderHeight = TAB_BAR_HEIGHT;
+  let dashboardResizeHandlersAttached = false;
+
+  const adjustDashboardViewBounds = () => {
+    try {
+      if (!mainWindow || !dashboardView) return;
+      const contentBounds = mainWindow.getContentBounds();
+      const header =
+        typeof activeHeaderHeight === "number" && activeHeaderHeight > 0
+          ? activeHeaderHeight
+          : TAB_BAR_HEIGHT;
+      dashboardView.setBounds({
+        x: 0,
+        y: header,
+        width: contentBounds.width,
+        height: Math.max(0, contentBounds.height - header),
+      });
+    } catch (_) {}
+  };
+
+  const attachDashboardResizeHandlers = () => {
+    if (!mainWindow || dashboardResizeHandlersAttached) return;
+    mainWindow.on("resize", adjustDashboardViewBounds);
+    mainWindow.on("maximize", adjustDashboardViewBounds);
+    mainWindow.on("unmaximize", adjustDashboardViewBounds);
+    mainWindow.on("enter-full-screen", adjustDashboardViewBounds);
+    mainWindow.on("leave-full-screen", adjustDashboardViewBounds);
+    dashboardResizeHandlersAttached = true;
+  };
+
+  const detachDashboardResizeHandlers = () => {
+    if (!mainWindow || !dashboardResizeHandlersAttached) return;
+    mainWindow.removeListener("resize", adjustDashboardViewBounds);
+    mainWindow.removeListener("maximize", adjustDashboardViewBounds);
+    mainWindow.removeListener("unmaximize", adjustDashboardViewBounds);
+    mainWindow.removeListener("enter-full-screen", adjustDashboardViewBounds);
+    mainWindow.removeListener("leave-full-screen", adjustDashboardViewBounds);
+    dashboardResizeHandlersAttached = false;
+  };
 
   ipcMain.handle("pinokio:set-view", async (event, config) => {
     if (!mainWindow) return;
 
     if (config.view === "dashboard") {
+      if (typeof config.headerHeight === "number" && config.headerHeight > 0) {
+        activeHeaderHeight = config.headerHeight;
+      }
       if (!dashboardView) {
         dashboardView = new BrowserView({
           webPreferences: {
@@ -2546,29 +2589,16 @@ document.querySelector("form").addEventListener("submit", (e) => {
       } else {
         mainWindow.setBrowserView(dashboardView);
       }
-
-      // Adjust bounds to sit below the tab bar
-      // Assuming tab bar height is around 46px (padding + text + border)
-      const bounds = mainWindow.getBounds();
-      // Content bounds might be different if there's a native frame, but we use hidden titlebar
-      const contentBounds = mainWindow.getContentBounds();
-
-      dashboardView.setBounds({
-        x: 0,
-        y: 46, // Height of the tab bar
-        width: contentBounds.width,
-        height: contentBounds.height - 46,
-      });
-      dashboardView.setAutoResize({
-        width: true,
-        height: true,
-        vertical: true,
-        horizontal: true,
-      });
+      adjustDashboardViewBounds();
+      attachDashboardResizeHandlers();
     } else {
+      if (typeof config.headerHeight === "number" && config.headerHeight > 0) {
+        activeHeaderHeight = config.headerHeight;
+      }
       // Switch to home
       mainWindow.setBrowserView(null);
       // We don't destroy dashboardView so state is preserved
+      detachDashboardResizeHandlers();
     }
   });
 

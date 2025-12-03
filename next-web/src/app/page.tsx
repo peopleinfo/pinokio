@@ -1,6 +1,7 @@
+"use client";
 import { useRef, useState } from "react";
 
-function App() {
+export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [port, setPort] = useState<number | null>(null);
@@ -23,9 +24,7 @@ function App() {
     try {
       const response = await fetch(
         `http://localhost:${port}/counter/${action}`,
-        {
-          method: "POST",
-        }
+        { method: "POST" }
       );
       const data = await response.json();
       setCounter(data.counter);
@@ -38,7 +37,7 @@ function App() {
     setLoading(true);
     setError("");
     try {
-      const res = await window.electronAPI.startPinokio();
+      const res = await (window as any).electronAPI?.startPinokio();
       if (!res || res.started !== true) {
         setError("Pinokio failed to start or is already running.");
         setLoading(false);
@@ -58,7 +57,7 @@ function App() {
   const openDashboard = async () => {
     setView("dashboard");
     const headerHeight = topBarRef.current?.offsetHeight || undefined;
-    await window.electronAPI.setDashboardView({
+    await (window as any).electronAPI?.setDashboardView({
       view: "dashboard",
       port,
       headerHeight,
@@ -68,7 +67,7 @@ function App() {
   const switchToHome = async () => {
     setView("home");
     const headerHeight = topBarRef.current?.offsetHeight || undefined;
-    await window.electronAPI.setDashboardView({
+    await (window as any).electronAPI?.setDashboardView({
       view: "home",
       headerHeight,
     });
@@ -215,6 +214,21 @@ function App() {
                     +
                   </button>
                 </div>
+                <div
+                  style={{
+                    marginTop: "16px",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <button
+                    className="btn"
+                    onClick={() => updateCounter("increment")}
+                    disabled={!port}
+                  >
+                    RN Reusables +
+                  </button>
+                </div>
               </div>
 
               <button className="btn" onClick={openDashboard}>
@@ -222,7 +236,7 @@ function App() {
               </button>
             </div>
           </div>
-          {/* Dashboard is now handled by BrowserView in main process */}
+          {/* Dashboard is handled by BrowserView in main process */}
           <div
             style={{
               width: "100%",
@@ -247,5 +261,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

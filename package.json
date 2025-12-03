@@ -8,7 +8,7 @@
   "email": "cocktailpeanuts@proton.me",
   "author": "https://twitter.com/cocktailpeanut",
   "scripts": {
-    "dev": "concurrently \"vite\" \"wait-on tcp:5173 && cross-env PINOKIO_DEV=true electron .\"",
+    "dev": "concurrently \"pnpm -C next-web dev\" \"wait-on tcp:3000 && cross-env PINOKIO_DEV=true electron .\"",
     "start": "electron .",
     "pack": "./node_modules/.bin/electron-builder --dir",
     "eject": "hdiutil info | grep '/dev/disk' | awk '{print $1}' | xargs -I {} hdiutil detach {}",
@@ -145,12 +145,16 @@
     "electron-store": "^8.1.0",
     "electron-updater": "^6.6.2",
     "electron-window-state": "^5.0.3",
-    "pinokiod": "^5.1.10"
+    "nativewind": "^4.2.1",
+    "pinokiod": "^5.1.10",
+    "react-native-web": "^0.21.2"
   },
   "devDependencies": {
     "@electron/rebuild": "3.2.10",
     "@types/react": "^19.2.7",
+    "@types/react-native": "^0.73.0",
     "@vitejs/plugin-react": "^5.1.1",
+    "babel-plugin-react-native-web": "^0.21.2",
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "electron": "39.2.3",
